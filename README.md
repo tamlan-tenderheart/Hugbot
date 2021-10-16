@@ -4,7 +4,7 @@ This little project is the fulfillment of an idea I've had for a long time in Da
 
 While I claim this bot is complete enough for my tastes, I am an endless tinkerer and will prolly make minor (or even major) enhancements and changes to it as time goes by.
 
-Caution: Many DAOC freeshards do not allow unattended gameplay (bots), and so the use of this bot on those shards would be against the server rules. Please make sure you understand the rules for the shard you are playing on w.r.t. bot use. I am not responsible for any losses you incur from the use of this bot code. The code for this bot is for educational purposes only; I make no guarantee. You have been warned!
+Caution: Many DAOC freeshards do not allow unattended gameplay (bots), and so the use of this bot on those shards would be against the server rules. Please make sure you understand the rules for the shard you are playing on w.r.t. bot use. I am not responsible for any losses you incur from the use of this bot code. The code for this bot is for educational purposes only; I make no guarantees about the quality or fitness of this code. You have been warned!
 
 This script uses AutoHotKey (https://www.autohotkey.com). You must have AHK installed in order to use this script.
 
