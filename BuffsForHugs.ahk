@@ -4,6 +4,13 @@
 ;
 ; Usage:
 ; Automatically buff people that hug the bot character in-game
+; There are a few modes of operation supported:
+;
+; F1 : Buffs the currently selected target in-game
+; F2 : Thanks the currently supported character in-game and then buffs them
+; F3 : First click sets the top-left point of the capture box; second click sets the bottom-right point of the capture box
+; F4 : Uses capture to detect all characters that have hugged you within the current on-screen log, thanks each on in turn, and buffs them
+; F5 : Starts / stops (toggle) autonomous mode that performs a F4 operation every second until stopped
 
 #SingleInstance, force
 #MaxThreadsPerHotkey 2
@@ -12,16 +19,17 @@ StringCaseSense, On
 
 ; variables
 
-global version := "0.1.9"
-global IsRunning := false
-global IsFirstPoint := true
-global Window := 0
-global sessionCount := 0
-global lifetimeCount := 0
-global x1 := 895  ; predetermined value
-global y1 := 1043 ; predetermined value
-global x2 := 1890 ; predetermined value
-global y2 := 1214 ; predetermined value
+global version := "0.1.12"      ; simple version string
+global bestowedBuffs := []      ; associative array with Player:tickCount recorded of last buff
+global IsRunning := false       ; autonomous running flag
+global IsFirstPoint := true     ; toggle for recording first or second point to determine screen capture box
+global Window := 0              ; HWND of the DAOC Window
+global sessionCount := 0        ; counter of number of buffs given in the current session
+global lifetimeCount := 0       ; counter of number of buffs given since script start
+global x1 := 895                ; x location for point 1 (given value is predetermined but modifyable during execution)
+global y1 := 1043               ; y location for point 1 (given value is predetermined but modifyable during execution)
+global x2 := 1890               ; x location for point 2 (given value is predetermined but modifyable during execution)
+global y2 := 1214               ; y location for point 2 (given value is predetermined but modifyable during execution)
 global Messages := ["/s Thank you for your warm hug, <player>{!} Please accept these buffs as a token of my gratitude{!} <3{Enter}"
   ,"/s Such a wonderful hug, <player>{!} Please take these buffs to assist you in the battle{!} <3{Enter}"
   ,"/s Your hugs are the best, <player>{!} I hope these buffs serve you well on the field{!} <3{Enter}"
@@ -44,6 +52,7 @@ TargetPlayer(Name)
 
 SendBuffsToTarget()
 {
+    ; harcoded sequence (8=DA buff, 9=Swing Speed Buff, 7=Bladeturn buff)
     Sleep, 200
     Send 8
     Sleep, 200
@@ -87,8 +96,8 @@ SessionEnd()
     if( ActivateDaocWindowIfPossible() )
     {
         Send /s Hugbot session ending. I buffed %sessionCount% player(s) this session, and %lifetimeCount% players(s) since script start{Enter}
-        Window := 0
     }
+    Window := 0
 }
 
 ActivateDaocWindowIfPossible()
@@ -104,20 +113,19 @@ ActivateDaocWindowIfPossible()
 ProcessScreenLog()
 {
     RunWait, C:/apps/Capture2Text/Capture2Text_CLI --screen-rect "%x1% %y1% %x2% %y2%" --clipboard,,Hide
-    seenPlayers := ""
     while pos := RegExMatch(Clipboard, "O)(\w+)(?=\shugs\syou)", m, m ? m.Pos + m.Len : 1)
     Loop, % m.Count()
     {
         player := FixI(m.Value(A_Index))
-        if( !InStr(seenPlayers, player))
+        If IsPlayerEligible(player)
         {
             ActivateDaocWindowIfPossible()
             TargetPlayer(player)
             ThankPlayer(player)
             SendBuffsToTarget()
             ClearSelectedTarget()
+            buffs[player] := A_TickCount ; record the time that we buffed this player
         }
-        seenPlayers := seenPlayers . " " . player
     }
     Return
 }
@@ -126,6 +134,13 @@ ThankPlayer(Player)
 {   
     Send % StrReplace(Messages[random(1, Messages.MaxIndex())], "<player>", Player)
     Return    
+}
+
+IsPlayerEligible(Player)
+{
+    If( bestowedBuffs.HasKey(player) )
+        return ( ( A_TickCount - bestowedBuffs[player] ) > 30000 )  ; rebuff window is 30s 
+    Else return true
 }
 
 FixI(name)
@@ -146,6 +161,13 @@ random( x, y )
 ;#IfWinActive ahk_exe game.dll
 
 F1::
+    ; Send buffs to targeted toon in-game
+    SendBuffsToTarget()
+    Return
+
+F2::
+    ; Send buffs to targeted toon in-game with thanks message
+    ThankPlayer("%t")
     SendBuffsToTarget()
     Return
 
@@ -166,10 +188,12 @@ F3::
     Return
 
 F4::
+    ; Send buffs to everyone that hugged me in current screen log (not looping)
     ProcessScreenLog()
     Return
 
 F5::
+    ; Begin autonomous operation
     IsRunning := ! IsRunning
     If( IsRunning )
     {
