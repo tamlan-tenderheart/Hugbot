@@ -6,11 +6,11 @@
 ; Automatically buff people that hug the bot character in-game
 ; There are a few modes of operation supported:
 ;
-; F1 : Buffs the currently selected target in-game
-; F2 : Thanks the currently supported character in-game and then buffs them
-; F3 : First click sets the top-left point of the capture box; second click sets the bottom-right point of the capture box
-; F4 : Uses capture to detect all characters that have hugged you within the current on-screen log, thanks each on in turn, and buffs them
-; F5 : Starts / stops (toggle) autonomous mode that performs a F4 operation every second until stopped
+; F1 > Buffs the currently selected toon in-game
+; F2 > Thanks the currently selected toon in-game and then buffs them
+; F3 > First click sets the top-left point of the capture box; second click sets the bottom-right point of the capture box
+; F4 > Uses capture to detect all toons that have hugged you in the on-screen capture box, thanks each one, and buffs them
+; F5 > (toggle) Starts / stops autonomous mode that performs a F4 operation every second until stopped
 
 #SingleInstance, force
 #MaxThreadsPerHotkey 2
