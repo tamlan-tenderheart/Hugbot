@@ -7,6 +7,7 @@ While I claim this bot is complete enough for my tastes, I am an endless tinkere
 Caution: Many DAOC freeshards do not allow unattended gameplay (bots), and so the use of this bot on those shards would be against the server rules. Please make sure you understand the rules for the shard you are playing on w.r.t. bot use. I am not responsible for any losses you incur from the use of this bot code. The code for this bot is for educational purposes only; I make no guarantees about the quality or fitness of this code. You have been warned!
 
 Because the server that I am currently playing on does not allow bots, I have updated the code to include a "macro mode" for handing out buffs (The F1 and F2 functions).
+
 This script uses AutoHotKey (https://www.autohotkey.com). You must have AHK installed in order to use this script.
 
 This script uses Capture2Text (https://sourceforge.net/projects/capture2text). You must have C2T installed in order to use this script.
@@ -37,4 +38,4 @@ Log scraping has the disadvantage of being clunky because the client doesn't do 
 
 Direct memory access is the most reliable, but this kind of bot is generally frowned upon on most freeshards and on Live as direct memory access is also the mechanic employed by game cheats and hacks, most of which are detectable and identified as a hack. Such bots can get your accounts permanently banned on many shards.
 
-Screen scraping is the way that this bot works. Essentially, once the bot is started, it periodically scans a region of the screen which contains the in-game event and chat log. A picture of this region is sent to an OCR tool which converts the picture to actual text. The text is then returned to the bot and can be parsed for events of interest. There are many details to consider with a bot of this nature, like polling period, re-reading old events, latency in processing the screen snippet, etc. For details on how some of these issues are addressed, please see the source code.
+Screen scraping is the way that this bot works. Essentially, once the bot is started in automated mode (or the semi-automated button has been pressed for a single cycle), it periodically scans a region of the screen which contains the in-game event and chat log. A picture of this region is sent to an OCR tool which converts the picture to text. The text is then returned to the bot and can be parsed for events of interest. The bot responds to the game by sending keystrokes to the game console using /slash commands. There are many details to consider with a bot of this nature, like polling period, re-reading old events, latency in processing the screen snippet, etc. For details on how some of these issues are addressed, please see the source code.
