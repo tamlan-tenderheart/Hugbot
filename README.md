@@ -13,7 +13,7 @@ This script uses AutoHotKey (https://www.autohotkey.com). You must have AHK inst
 This script uses Capture2Text (https://sourceforge.net/projects/capture2text). You must have C2T installed in order to use this script.
 
 ## How to use this Bot
-The bot can be run in one of three modes: manual, semi-automated, and fully automated.
+The bot has three operational modes: manual, semi-automated, and fully automated.
 * The manual mode of operation requires you to manually target the player you wish to buff and then press a key to send them a full load of buffs. Hugs are not necessary to use this mode!
 * The semi-autonomous mode of operation does not require you to manually target the players. All players whose hugs are registered on-screen when you hit the button will receive a full load of buffs. You have to press the button each time to process the current on-screen log.
 * The fully autonomous mode of operation requires no interaction from the user. Once the session is started, the script scans the on-screen log and sends buffs to everyone that /hug ed the player. Once the cycle of buffs is complete, it will pause for a moment before starting another scan. It will continue to operate until the session is closed.
