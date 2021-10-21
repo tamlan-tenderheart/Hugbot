@@ -50,18 +50,22 @@ TargetPlayer(Name)
     Return
 }
 
-SendBuffsToTarget()
+SendBuffsToTarget(IsMetered, IsAsync)
 {
     ; harcoded sequence (8=DA buff, 9=Swing Speed Buff, 7=Bladeturn buff)
     Sleep, 200
     Send 8
     Sleep, 200
     Send 9
-    Sleep, 3000
+    Sleep, 3000 ; need this pause to allow the first buff to finish casting so the second isn't clobbered by the third
     Send 7
-    Sleep, 7500
-    sessionCount += 1
-    lifetimeCount += 1
+    if( IsAsync ) Sleep, 7500 
+    if( IsMetered )
+    {
+        sessionCount += 1
+        lifetimeCount += 1
+        buffs[player] := A_TickCount ; record the time that we buffed this player
+    }
     Return
 }
 
@@ -122,9 +126,8 @@ ProcessScreenLog()
             ActivateDaocWindowIfPossible()
             TargetPlayer(player)
             ThankPlayer(player)
-            SendBuffsToTarget()
-            ClearSelectedTarget()
-            buffs[player] := A_TickCount ; record the time that we buffed this player
+            SendBuffsToTarget(true, true)
+            ClearSelectedTarget()            
         }
     }
     Return
@@ -145,7 +148,7 @@ IsPlayerEligible(Player)
 
 FixI(name)
 {
-    If(InStr(name, "l")=1)
+    If(InStr(name, "l")=1) ; My UI uses a font where the lowercase L looks like the uppercase I.
     {
         return StrReplace(name, "l", "I",,1)    
     }
@@ -162,13 +165,13 @@ random( x, y )
 
 F1::
     ; Send buffs to targeted toon in-game
-    SendBuffsToTarget()
+    SendBuffsToTarget(false, false)
     Return
 
 F2::
     ; Send buffs to targeted toon in-game with thanks message
     ThankPlayer("%t")
-    SendBuffsToTarget()
+    SendBuffsToTarget(false, false)
     Return
 
 F3::
